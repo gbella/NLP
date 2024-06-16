@@ -15,7 +15,7 @@ from sklearn.linear_model import LogisticRegression
 #-----------
 # Exercise 1
 #-----------
-data = pd.read_csv('sms_spam.csv',sep=';')
+#data = pd.read_csv('sms_spam.csv',sep=';')
 #-----------
 # Exercise 2
 #-----------
@@ -23,19 +23,19 @@ data = pd.read_csv('sms_spam.csv',sep=';')
 #--------------
 # Exercises 1+2
 #--------------
-messages = data["message"]
-labels = data["label"]
+#messages = data["message"]
+#labels = data["label"]
     #----------------------------------------------------------
     # Shuffle and split the data into a training and a test set
     # (80% training, 20% test). The random_state is fixed
     # so that we get the same random shuffle at every execution.
     #----------------------------------------------------------
-training_messages, testing_messages, training_labels, testing_labels = train_test_split(messages, labels, test_size=0.2, random_state=42)
+#training_messages, testing_messages, training_labels, testing_labels = train_test_split(messages, labels, test_size=0.2, random_state=42)
 #--------------
 # Exercises 3+4
 #--------------
-#sms_data = pd.read_csv('sms_spam.csv',sep=';')
-#email_data = pd.read_csv('email_spam.csv')
+sms_data = pd.read_csv('sms_spam.csv',sep=';')
+email_data = pd.read_csv('email_spam.csv')
 #-----------
 # Exercise 3
 #-----------
@@ -46,9 +46,9 @@ training_messages, testing_messages, training_labels, testing_labels = train_tes
 #-----------
 # Exercise 4
 #-----------
-#messages = pd.concat([email_data['message'], sms_data['message']])
-#labels = pd.concat([email_data['label'], sms_data['label']])
-#training_messages, testing_messages, training_labels, testing_labels = train_test_split(messages, labels, test_size=0.2, random_state=42)
+messages = pd.concat([email_data['message'], sms_data['message']])
+labels = pd.concat([email_data['label'], sms_data['label']])
+training_messages, testing_messages, training_labels, testing_labels = train_test_split(messages, labels, test_size=0.2, random_state=42)
 
 # ============================================================
 # CODE COMMON TO ALL EXERCISES
@@ -96,21 +96,44 @@ predicted_labels = clf.predict(test_features)
 # Accuracy = correct_predictions / total_predictions
 def accuracy_score(truth, pred):
     # TODO: COMPLETE THE CODE
-    return 0
+    correct = 0
+    for i in range(0,len(truth)):
+        if truth[i] == pred[i]:
+            correct = correct + 1
+    return correct / len(truth)
 
 # Precision = true_positives / (true_positives + false_positives)
 def precision_score(truth, pred, pos_label):
     # TODO: COMPLETE THE CODE
-    return 0
+    tp = 0
+    fp = 0
+    for i in range(0,len(truth)):
+        if truth[i] == pred[i] and truth[i] == pos_label:
+            tp = tp + 1
+        elif pred[i] == pos_label and not pred[i] == truth[i]:
+            fp = fp + 1
+    return tp / (tp + fp)
     
 # Recall = true_positives / (true_positives + false_negatives)
 def recall_score(truth, pred, pos_label):
     # TODO: COMPLETE THE CODE
-    return 0
+    tp = 0
+    fn = 0
+    for i in range(0,len(truth)):
+        if truth[i] == pred[i] and truth[i] == pos_label:
+            tp = tp + 1
+        elif not pred[i] == pos_label and not pred[i] == truth[i]:
+            fn = fn + 1
+    return tp / (tp + fn)
 
 def f1_score(truth, pred, pos_label):
     # TODO: COMPLETE THE CODE
-    return 0
+    p = precision_score(truth, pred, pos_label)
+    r = recall_score(truth, pred, pos_label)
+    if (p + r) == 0:
+        return 0
+    f = 2 * p * r / (p + r)
+    return f
 
 print('Accuracy:', accuracy_score(testing_labels.values, predicted_labels))
 print('Precision:', precision_score(testing_labels.values, predicted_labels, pos_label=1))
