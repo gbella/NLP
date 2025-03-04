@@ -1,7 +1,7 @@
+import requests 
 import nltk
 from nltk.corpus import wordnet as wn
 nltk.download('wordnet')
-import requests 
 
 #-------------------------------------------------------------
 # Path (lowest common ancestor) similarity between two synsets
